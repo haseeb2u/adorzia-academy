@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { PuzzlePiece, Award, TrendingUp } from 'lucide-react';
+import { Puzzle, Award, TrendingUp } from 'lucide-react';
 
 const StyleBox = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -68,7 +68,7 @@ const StyleBox = () => {
   };
 
   const categoryIcons = {
-    "Fashion Design": <PuzzlePiece className="w-4 h-4" />,
+    "Fashion Design": <Puzzle className="w-4 h-4" />,
     "Textile Design": <Award className="w-4 h-4" />,
     "Trend": <TrendingUp className="w-4 h-4" />
   };
@@ -89,7 +89,7 @@ const StyleBox = () => {
             <div className="flex flex-col sm:flex-row gap-6 reveal reveal-delay-3">
               <div className="flex-1 p-6 bg-adorzia-lightGray rounded-lg">
                 <div className="flex items-center mb-3">
-                  <PuzzlePiece className="w-5 h-5 text-adorzia-accent mr-2" />
+                  <Puzzle className="w-5 h-5 text-adorzia-accent mr-2" />
                   <h4 className="text-lg font-medium">Difficulty-Based</h4>
                 </div>
                 <p className="text-sm text-adorzia-midGray">Easy, medium, and hard challenges for every skill level.</p>
