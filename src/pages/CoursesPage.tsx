@@ -1,9 +1,11 @@
+
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CourseStructure, { CourseProps } from '@/components/CourseStructure';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 const CoursesPage = () => {
   const sectionRef = useRef<HTMLDivElement>(null);

@@ -5,7 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ChevronRight, Clock, CheckCircle, Book, Puzzle, FileText } from 'lucide-react';
+import { ChevronRight, Clock, CheckCircle, Book, Puzzle, FileText, LockKeyhole } from 'lucide-react';
 
 const DemoCourse = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -181,7 +181,7 @@ const DemoCourse = () => {
                       
                       <div className="bg-adorzia-lightGray p-4 rounded-lg">
                         <div className="flex items-center text-adorzia-midGray">
-                          <Lock className="w-4 h-4 mr-2 text-adorzia-accent" />
+                          <LockKeyhole className="w-4 h-4 mr-2 text-adorzia-accent" />
                           <span>Complete Module 1 to unlock this content</span>
                         </div>
                       </div>
@@ -219,7 +219,7 @@ const DemoCourse = () => {
                       
                       <div className="bg-adorzia-lightGray p-4 rounded-lg">
                         <div className="flex items-center text-adorzia-midGray">
-                          <Lock className="w-4 h-4 mr-2 text-adorzia-accent" />
+                          <LockKeyhole className="w-4 h-4 mr-2 text-adorzia-accent" />
                           <span>Complete Module 1 StyleBox Challenge to unlock this challenge</span>
                         </div>
                       </div>
