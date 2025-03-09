@@ -1,5 +1,5 @@
-
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import LearningPath from '@/components/LearningPath';
@@ -8,6 +8,7 @@ import CertificationPath from '@/components/CertificationPath';
 import SubscriptionPlans from '@/components/SubscriptionPlans';
 import Footer from '@/components/Footer';
 import CourseCard from '@/components/CourseCard';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   // Helper function to implement intersection observer for animations
@@ -91,6 +92,14 @@ const Index = () => {
                 <CourseCard {...course} />
               </div>
             ))}
+          </div>
+          
+          <div className="mt-12 text-center reveal reveal-delay-3">
+            <Link to="/courses">
+              <Button className="bg-adorzia-accent hover:bg-adorzia-accentHover text-white">
+                View All Course Structures
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
