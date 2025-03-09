@@ -1,8 +1,9 @@
-
 import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CourseStructure, { CourseProps } from '@/components/CourseStructure';
+import { Button } from '@/components/ui/button';
 
 const CoursesPage = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -169,6 +170,24 @@ const CoursesPage = () => {
               Our comprehensive courses combine theoretical knowledge with practical StyleBox challenges, 
               allowing you to master fashion design skills step by step.
             </p>
+          </div>
+
+          {/* Demo Course Banner */}
+          <div className="card p-6 md:p-8 mb-8 bg-adorzia-accent/5 border-adorzia-accent reveal">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
+              <div>
+                <Badge className="bg-green-50 text-green-600 mb-2">Featured Demo</Badge>
+                <h3 className="text-xl md:text-2xl font-medium mb-2">Fashion Design Fundamentals</h3>
+                <p className="text-adorzia-midGray mb-4 md:mb-0">
+                  Experience our detailed module-by-module learning path with interactive StyleBox challenges.
+                </p>
+              </div>
+              <Link to="/courses/demo">
+                <Button className="bg-adorzia-accent hover:bg-adorzia-accentHover text-white">
+                  View Demo Course
+                </Button>
+              </Link>
+            </div>
           </div>
 
           <div className="space-y-8">
