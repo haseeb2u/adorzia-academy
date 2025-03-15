@@ -35,7 +35,7 @@ const Index = () => {
     };
   }, []);
 
-  // Updated featured courses to showcase Adorzia's industrial courses
+  // All Adorzia certification courses
   const featuredCourses = [
     {
       title: "Adorzia Certified Fashion Designer (ACFD)",
@@ -66,15 +66,42 @@ const Index = () => {
       students: 1450,
       rating: 4.9,
       category: "Certification"
+    },
+    {
+      title: "Adorzia Certified Pattern Maker (ACPM)",
+      description: "Master pattern making and garment construction! Includes manual & digital pattern drafting, draping techniques, and sizing adjustments.",
+      image: "https://images.unsplash.com/photo-1480881683242-4534b92efb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      level: "Professional",
+      duration: "15 weeks",
+      students: 1680,
+      rating: 4.8,
+      category: "Certification"
+    },
+    {
+      title: "Adorzia Pro: Advanced Fashion Illustration",
+      description: "Take your fashion sketching skills to the next level! Master digital fashion illustration, hand-drawn techniques, and fabric rendering.",
+      image: "https://images.unsplash.com/photo-1516762689617-e1cffcef479d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      level: "Professional",
+      duration: "10 weeks",
+      students: 2120,
+      rating: 4.9,
+      category: "Masterclass"
+    },
+    {
+      title: "Adorzia Masterclass: Sustainable Fashion & Ethical Design",
+      description: "Design fashion with a purpose! Learn sustainability in fashion, ethical sourcing, zero-waste design, and eco-friendly production.",
+      image: "https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      level: "Professional",
+      duration: "8 weeks",
+      students: 1950,
+      rating: 4.7,
+      category: "Masterclass"
     }
   ];
 
-  // Additional Adorzia branded courses to showcase in a separate section
+  // Additional Adorzia courses to showcase in a separate section
   const additionalCourses = [
-    "Adorzia Pro: Advanced Fashion Illustration",
-    "Adorzia Masterclass: Sustainable Fashion & Ethical Design",
     "Adorzia 3D Fashion Design & Digital Clothing",
-    "Adorzia Certified Pattern Maker (ACPM)",
     "Adorzia Pro: Fashion Tech & AI in Design"
   ];
 
@@ -98,7 +125,7 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredCourses.map((course, index) => (
+            {featuredCourses.slice(0, 6).map((course, index) => (
               <div key={course.title} className={`reveal ${index === 1 ? 'reveal-delay-1' : index === 2 ? 'reveal-delay-2' : ''}`}>
                 <CourseCard {...course} />
               </div>

@@ -142,3 +142,12 @@ export interface AuthContextType {
   signIn: (email: string, password: string) => boolean;
   signOut: () => void;
 }
+
+// Type for module form data (needed for ModuleFormList.tsx)
+export interface ModuleFormData {
+  id: string;
+  title: string;
+  description: string;
+  duration: number;
+  order: number;
+}
