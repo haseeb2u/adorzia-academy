@@ -2,13 +2,15 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Book, Puzzle, Lightbulb, GraduationCap, Lock, Trophy } from 'lucide-react';
+import { Book, Puzzle, Lightbulb, GraduationCap, Lock, Trophy, CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export interface Module {
   title: string;
   theory: string;
   practice: string;
   difficulty?: 'Easy' | 'Medium' | 'Hard';
+  completed?: boolean;
 }
 
 export interface CourseProps {
@@ -22,6 +24,7 @@ export interface CourseProps {
   };
   modules: Module[];
   certification?: boolean;
+  progress?: number;
 }
 
 const CourseStructure: React.FC<CourseProps> = ({
@@ -32,7 +35,10 @@ const CourseStructure: React.FC<CourseProps> = ({
   access,
   modules,
   certification = false,
+  progress = 0,
 }) => {
+  const navigate = useNavigate();
+  
   const levelColors = {
     'Beginner Level': 'bg-blue-50 text-blue-600',
     'Intermediate Level': 'bg-purple-50 text-purple-600',
@@ -49,6 +55,11 @@ const CourseStructure: React.FC<CourseProps> = ({
     'Easy': 'bg-green-50 text-green-600',
     'Medium': 'bg-amber-50 text-amber-600',
     'Hard': 'bg-rose-50 text-rose-600',
+  };
+
+  const handleEnroll = () => {
+    // In a real application, this would enroll the user in the course
+    navigate(`/dashboard`);
   };
 
   return (
@@ -82,6 +93,21 @@ const CourseStructure: React.FC<CourseProps> = ({
         <span className="font-medium text-black">Objective:</span> {objective}
       </p>
       
+      {progress > 0 && (
+        <div className="mb-8 bg-adorzia-lightGray p-4 rounded-lg">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm font-medium">Course Progress</span>
+            <span className="text-sm font-medium">{progress}%</span>
+          </div>
+          <div className="w-full bg-gray-200 h-2 rounded-full">
+            <div 
+              className="bg-adorzia-tertiary h-2 rounded-full transition-all duration-300" 
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        </div>
+      )}
+      
       <div className="mb-8">
         <h4 className="text-lg font-medium mb-4 flex items-center">
           <Book className="w-5 h-5 mr-2 text-adorzia-accent" />
@@ -92,9 +118,14 @@ const CourseStructure: React.FC<CourseProps> = ({
           {modules.map((module, index) => (
             <div 
               key={module.title} 
-              className="border-l-4 border-adorzia-accent pl-6 py-2"
+              className={`border-l-4 ${module.completed ? 'border-adorzia-tertiary' : 'border-adorzia-accent'} pl-6 py-2`}
             >
-              <h5 className="text-lg font-medium mb-3">📖 Module {index + 1}: {module.title}</h5>
+              <h5 className="text-lg font-medium mb-3 flex items-center">
+                {module.completed && (
+                  <CheckCircle className="w-4 h-4 text-adorzia-tertiary mr-2" />
+                )}
+                📖 Module {index + 1}: {module.title}
+              </h5>
               
               <div className="mb-3">
                 <div className="flex items-start mb-1">
@@ -135,7 +166,10 @@ const CourseStructure: React.FC<CourseProps> = ({
         </div>
       )}
       
-      <Button className="w-full bg-adorzia-accent hover:bg-adorzia-accentHover text-white">
+      <Button 
+        className="w-full bg-adorzia-accent hover:bg-adorzia-accentHover text-white"
+        onClick={handleEnroll}
+      >
         {access.type === 'Registered' ? 'Enroll Now' : access.type === 'Paid' ? 'Subscribe to Access' : 'Join VIP Program'}
       </Button>
     </div>

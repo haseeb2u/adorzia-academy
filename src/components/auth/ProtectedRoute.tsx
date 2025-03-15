@@ -5,9 +5,16 @@ import { useToast } from '@/hooks/use-toast';
 
 // Mock authentication - in a real app this would come from your auth provider
 const useAuth = () => {
-  // For demo purposes we'll just return true to simulate being logged in
+  // For demo purposes we're simulating authentication state
   // In a real application, this would check if the user is authenticated
-  return { isAuthenticated: true };
+  return { 
+    isAuthenticated: true,
+    user: {
+      name: "Jane Doe",
+      email: "jane@example.com",
+      role: "student"
+    }
+  };
 };
 
 interface ProtectedRouteProps {

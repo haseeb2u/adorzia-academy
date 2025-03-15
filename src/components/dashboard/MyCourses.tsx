@@ -19,30 +19,30 @@ const MyCourses = () => {
   const courses: Course[] = [
     {
       id: 1,
-      title: 'Web Development Fundamentals',
-      category: 'Programming',
+      title: 'Fashion Design Fundamentals',
+      category: 'Design',
       progress: 68,
       image: '/placeholder.svg',
     },
     {
       id: 2,
-      title: 'User Experience Design Essentials',
-      category: 'Design',
+      title: 'Advanced Textile Design & Patterns',
+      category: 'Textile',
       progress: 45,
       image: '/placeholder.svg',
     },
     {
       id: 3,
-      title: 'Business Analytics for Beginners',
-      category: 'Business',
+      title: 'Color Theory for Fashion',
+      category: 'Design',
       progress: 100,
       image: '/placeholder.svg',
     },
     {
       id: 4,
-      title: 'Digital Marketing Strategies',
-      category: 'Marketing',
-      progress: 92,
+      title: 'Fashion Entrepreneurship & Business',
+      category: 'Business',
+      progress: 20,
       image: '/placeholder.svg',
     }
   ];
@@ -84,7 +84,7 @@ const MyCourses = () => {
                 variant="ghost" 
                 size="sm" 
                 className="text-adorzia-primary hover:text-adorzia-secondary ml-2"
-                onClick={() => navigate(`/course/${course.id}`)}
+                onClick={() => navigate('/courses/demo')}
               >
                 Continue
               </Button>

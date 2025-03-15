@@ -6,6 +6,9 @@ import Footer from '@/components/Footer';
 import CourseStructure, { CourseProps } from '@/components/CourseStructure';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import LearningPath from '@/components/LearningPath';
+import StyleBox from '@/components/StyleBox';
+import CertificationPath from '@/components/CertificationPath';
 
 const CoursesPage = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -42,7 +45,7 @@ const CoursesPage = () => {
       title: "Fashion Design Fundamentals",
       level: "Beginner Level",
       emoji: "🏆",
-      objective: "Teach the basics of fashion design, from sketching to color theory, with hands-on StyleBox challenges.",
+      objective: "Master the basics of fashion design, from sketching to color theory, with hands-on StyleBox challenges.",
       access: {
         type: "Registered",
         description: "Open to All Users"
@@ -164,7 +167,7 @@ const CoursesPage = () => {
       <section className="py-24" ref={sectionRef}>
         <div className="container max-w-7xl mx-auto px-6 md:px-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="badge reveal">Course Structures</div>
+            <div className="badge reveal">Adorzia Academy</div>
             <h2 className="font-serif mt-4 mb-6 reveal reveal-delay-1">
               Structured <span className="text-adorzia-accent">Learning Paths</span>
             </h2>
@@ -204,6 +207,12 @@ const CoursesPage = () => {
           </div>
         </div>
       </section>
+      
+      <LearningPath />
+      
+      <StyleBox />
+      
+      <CertificationPath />
       
       <Footer />
     </div>

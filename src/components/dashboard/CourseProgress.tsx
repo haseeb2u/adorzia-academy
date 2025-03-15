@@ -4,15 +4,22 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { PlayCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const CourseProgress = () => {
+  const navigate = useNavigate();
+  
   const currentCourse = {
     id: 1,
-    title: 'Web Development Fundamentals',
+    title: 'Fashion Design Fundamentals',
     progress: 68,
-    currentLesson: 'Introduction to JavaScript Functions',
+    currentLesson: 'Introduction to Fashion Design Theory',
     timeLeft: '22 minutes left',
     image: '/placeholder.svg',
+  };
+
+  const handleResumeLearning = () => {
+    navigate('/courses/demo');
   };
 
   return (
@@ -38,14 +45,19 @@ const CourseProgress = () => {
                 <span>{currentCourse.progress}% completed</span>
                 <span>{currentCourse.timeLeft}</span>
               </div>
-              <Progress value={currentCourse.progress} className="h-2" 
-                style={{ backgroundColor: '#f1e7d8' }} // Lighter version of tertiary color
-                indicatorStyle={{ backgroundColor: '#BB9457' }} // Tertiary color
+              <Progress 
+                value={currentCourse.progress} 
+                className="h-2"
+                // Fix: Remove inline styles and use Tailwind classes
+                // The Progress component doesn't accept indicatorStyle prop
               />
             </div>
             
             <div className="mt-4">
-              <Button className="bg-adorzia-tertiary hover:bg-adorzia-secondary text-white">
+              <Button 
+                className="bg-adorzia-tertiary hover:bg-adorzia-secondary text-white"
+                onClick={handleResumeLearning}
+              >
                 <PlayCircle className="mr-2 h-4 w-4" />
                 Resume Learning
               </Button>
