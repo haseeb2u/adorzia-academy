@@ -115,3 +115,17 @@ export interface EnhancedCourse {
     expertise: string[];
   }[];
 }
+
+export interface User {
+  name: string;
+  email: string;
+  role: 'admin' | 'student' | 'guest';
+}
+
+// Interface for Auth context
+export interface AuthContextType {
+  isAuthenticated: boolean;
+  user: User;
+  signIn: (email: string, password: string) => boolean;
+  signOut: () => void;
+}

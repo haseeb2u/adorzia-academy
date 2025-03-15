@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -20,11 +19,48 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useToast } from '@/hooks/use-toast';
-import { ChevronLeft, Save } from 'lucide-react';
+import { ChevronLeft, Save, Loader2 } from 'lucide-react';
 import EnhancedModuleFormList from '@/components/admin/EnhancedModuleFormList';
-import { EnhancedModule } from '@/types/course';
+import { EnhancedModule, EnhancedCourse } from '@/types/course';
 
-// Define form schema
+const useDatabase = () => {
+  const storageKey = 'adorziaCoursesData';
+  
+  const getCourses = (): Record<string, EnhancedCourse> => {
+    const stored = localStorage.getItem(storageKey);
+    if (!stored) return {};
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error("Failed to parse stored courses", e);
+      return {};
+    }
+  };
+  
+  const getCourse = (id: string): EnhancedCourse | null => {
+    const courses = getCourses();
+    return courses[id] || null;
+  };
+  
+  const saveCourse = (course: EnhancedCourse): EnhancedCourse => {
+    const courses = getCourses();
+    courses[course.id] = course;
+    localStorage.setItem(storageKey, JSON.stringify(courses));
+    return course;
+  };
+  
+  const deleteCourse = (id: string): boolean => {
+    const courses = getCourses();
+    if (!courses[id]) return false;
+    
+    delete courses[id];
+    localStorage.setItem(storageKey, JSON.stringify(courses));
+    return true;
+  };
+  
+  return { getCourses, getCourse, saveCourse, deleteCourse };
+};
+
 const courseFormSchema = z.object({
   title: z.string().min(5, {
     message: "Course title must be at least 5 characters.",
@@ -50,156 +86,76 @@ const courseFormSchema = z.object({
 
 type CourseFormValues = z.infer<typeof courseFormSchema>;
 
-// Mock course data for editing an existing course
-const mockCourseData = {
-  '1': {
-    title: 'Fashion Design Fundamentals',
-    level: 'Beginner Level',
-    emoji: '🏆',
-    objective: 'Master the basics of fashion design, from sketching to color theory, with hands-on StyleBox challenges.',
-    accessType: 'Registered' as const,
-    accessDescription: 'Open to All Users',
-    hasCertification: true,
-    communityForums: true,
-    liveQAsessions: true,
-    badgesSystem: true,
-    modules: [
-      {
-        id: 'module-1',
-        title: "Introduction to Fashion Design",
-        description: "An overview of fashion design principles and history",
-        videoLectures: [
-          {
-            id: 'video-1',
-            title: "Fashion Design Fundamentals",
-            type: 'video' as const,
-            content: "Learn the basics of fashion design in this introductory video",
-            duration: 15,
-            url: "https://example.com/video1"
-          }
-        ],
-        readings: [
-          {
-            id: 'reading-1',
-            title: "Fashion Design Through History",
-            type: 'reading' as const,
-            content: "Explore how fashion has evolved through different eras",
-            author: "Jane Smith"
-          }
-        ],
-        quizzes: [
-          {
-            id: 'quiz-1',
-            title: "Fashion Basics Quiz",
-            type: 'quiz' as const,
-            content: "Test your understanding of fashion design principles",
-            questions: [],
-            passingScore: 70
-          }
-        ],
-        challenge: {
-          id: 'challenge-1',
-          title: "Create a Minimalist Streetwear Outfit",
-          type: 'challenge' as const,
-          content: "Design a modern, sleek, and wearable street outfit",
-          difficulty: "Easy" as const,
-          requirements: [
-            "Use a neutral color palette (white, black, grey, beige)",
-            "Create oversized or structured fits",
-            "Use cotton, denim, or soft fleece fabrics"
-          ],
-          evaluation: {
-            autoFeedback: true,
-            peerReview: true,
-            expertAssessment: true
-          }
-        },
-        badge: {
-          id: 'badge-1',
-          name: "Fashion Pioneer",
-          description: "Awarded for completing the introduction to fashion design",
-          imageUrl: "/badges/fashion-pioneer.png"
-        },
-        forum: {
-          discussions: []
-        },
-        evaluationSystem: {
-          autoFeedback: true,
-          peerReview: true,
-          expertAssessment: true
-        },
-        duration: 2,
-        order: 1
-      },
-      // Additional modules would be included here
-    ]
-  }
-};
-
 const CourseForm = () => {
   const { id } = useParams();
   const isEditing = !!id;
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { getCourse, saveCourse } = useDatabase();
+  const [isLoading, setIsLoading] = useState(false);
   
-  // State for enhanced modules
-  const [modules, setModules] = useState<EnhancedModule[]>(
-    isEditing && id && mockCourseData[id as keyof typeof mockCourseData]?.modules 
-      ? mockCourseData[id as keyof typeof mockCourseData].modules
-      : [{
-          id: `module-${Date.now()}`,
-          title: '',
-          description: '',
-          videoLectures: [],
-          readings: [],
-          quizzes: [],
-          challenge: {
-            id: `challenge-${Date.now()}`,
-            title: '',
-            type: 'challenge',
-            content: '',
-            difficulty: 'Medium',
-            requirements: [],
-            evaluation: {
-              autoFeedback: true,
-              peerReview: false,
-              expertAssessment: true
-            }
-          },
-          badge: {
-            id: `badge-${Date.now()}`,
-            name: '',
-            description: '',
-            imageUrl: ''
-          },
-          forum: {
-            discussions: []
-          },
-          evaluationSystem: {
-            autoFeedback: true,
-            peerReview: true,
-            expertAssessment: true
-          },
-          duration: 2,
-          order: 1
-        }]
-  );
+  const [modules, setModules] = useState<EnhancedModule[]>([{
+    id: `module-${Date.now()}`,
+    title: '',
+    description: '',
+    resources: [],
+    videoLectures: [],
+    readings: [],
+    quizzes: [],
+    challenge: {
+      id: `challenge-${Date.now()}`,
+      title: '',
+      type: 'challenge',
+      content: '',
+      difficulty: 'Medium',
+      requirements: [],
+      evaluation: {
+        autoFeedback: true,
+        peerReview: false,
+        expertAssessment: true
+      }
+    },
+    badge: {
+      id: `badge-${Date.now()}`,
+      name: '',
+      description: '',
+      imageUrl: ''
+    },
+    forum: {
+      discussions: []
+    },
+    evaluationSystem: {
+      autoFeedback: true,
+      peerReview: true,
+      expertAssessment: true
+    },
+    duration: 2,
+    order: 1
+  }]);
 
-  // Set up form with default values
+  useEffect(() => {
+    if (isEditing && id) {
+      const existingCourse = getCourse(id);
+      if (existingCourse) {
+        setModules(existingCourse.modules);
+      }
+    }
+  }, [isEditing, id]);
+
   const form = useForm<CourseFormValues>({
     resolver: zodResolver(courseFormSchema),
-    defaultValues: isEditing && id && mockCourseData[id as keyof typeof mockCourseData]
+    defaultValues: isEditing && id && getCourse(id)
       ? {
-          title: mockCourseData[id as keyof typeof mockCourseData].title,
-          level: mockCourseData[id as keyof typeof mockCourseData].level,
-          emoji: mockCourseData[id as keyof typeof mockCourseData].emoji,
-          objective: mockCourseData[id as keyof typeof mockCourseData].objective,
-          accessType: mockCourseData[id as keyof typeof mockCourseData].accessType,
-          accessDescription: mockCourseData[id as keyof typeof mockCourseData].accessDescription,
-          hasCertification: mockCourseData[id as keyof typeof mockCourseData].hasCertification,
-          communityForums: mockCourseData[id as keyof typeof mockCourseData].communityForums,
-          liveQAsessions: mockCourseData[id as keyof typeof mockCourseData].liveQAsessions,
-          badgesSystem: mockCourseData[id as keyof typeof mockCourseData].badgesSystem,
+          title: getCourse(id)!.title,
+          level: getCourse(id)!.level,
+          emoji: getCourse(id)!.emoji,
+          objective: getCourse(id)!.objective,
+          accessType: getCourse(id)!.access.type,
+          accessDescription: getCourse(id)!.access.description,
+          hasCertification: getCourse(id)!.certification,
+          communityForums: getCourse(id)!.communityForums || true,
+          liveQAsessions: getCourse(id)!.liveQAsessions || true,
+          badgesSystem: getCourse(id)!.badgesSystem || true,
         }
       : {
           title: '',
@@ -216,17 +172,18 @@ const CourseForm = () => {
   });
 
   const onSubmit = (values: CourseFormValues) => {
-    // Validate that we have at least one module
+    setIsLoading(true);
+    
     if (modules.length === 0) {
       toast({
         variant: "destructive",
         title: "Validation Error",
         description: "At least one module is required",
       });
+      setIsLoading(false);
       return;
     }
 
-    // Check if all modules have required fields
     const incompleteModules = modules.some(
       module => !module.title || !module.description || !module.challenge.title
     );
@@ -237,20 +194,55 @@ const CourseForm = () => {
         title: "Validation Error",
         description: "All modules must have a title, description, and StyleBox challenge",
       });
+      setIsLoading(false);
       return;
     }
 
-    // In a real app, we would send this data to an API
-    console.log('Form values:', values);
-    console.log('Enhanced Modules:', modules);
+    const courseData: EnhancedCourse = {
+      id: isEditing && id ? id : `course-${Date.now()}`,
+      title: values.title,
+      level: values.level,
+      emoji: values.emoji,
+      objective: values.objective,
+      access: {
+        type: values.accessType,
+        description: values.accessDescription,
+      },
+      modules: modules,
+      certification: values.hasCertification,
+      communityForums: values.communityForums,
+      liveQAsessions: values.liveQAsessions,
+      badgesSystem: values.badgesSystem,
+      instructors: [
+        {
+          id: "instructor-1",
+          name: "Jane Doe",
+          avatar: "/assets/instructor1.jpg",
+          bio: "Fashion designer with over 10 years of experience",
+          expertise: ["Fashion Design", "Textile Design", "Pattern Making"]
+        }
+      ]
+    };
 
-    toast({
-      title: `Course ${isEditing ? 'updated' : 'created'} successfully`,
-      description: `${values.title} has been ${isEditing ? 'updated' : 'created'} with enhanced module structure.`,
-    });
+    try {
+      saveCourse(courseData);
+      
+      toast({
+        title: `Course ${isEditing ? 'updated' : 'created'} successfully`,
+        description: `${values.title} has been ${isEditing ? 'updated' : 'created'} with enhanced module structure.`,
+      });
 
-    // Redirect to admin dashboard
-    navigate('/admin');
+      navigate('/admin');
+    } catch (error) {
+      console.error("Error saving course:", error);
+      toast({
+        variant: "destructive",
+        title: "Save Error",
+        description: "There was an error saving the course. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -261,7 +253,7 @@ const CourseForm = () => {
     <div className="min-h-screen bg-adorzia-lightGray">
       <Navbar />
       
-      <div className="bg-adorzia-primary text-white py-8">
+      <div className="bg-adorzia-primary text-white py-8 pt-24">
         <div className="container max-w-7xl mx-auto px-4">
           <div className="flex items-center gap-2 mb-4">
             <Button 
@@ -536,9 +528,22 @@ const CourseForm = () => {
               <Button type="button" variant="outline" onClick={handleCancel}>
                 Cancel
               </Button>
-              <Button type="submit" className="bg-adorzia-accent hover:bg-adorzia-accentHover flex items-center gap-2">
-                <Save className="h-4 w-4" />
-                {isEditing ? 'Update Enhanced Course' : 'Create Enhanced Course'}
+              <Button 
+                type="submit" 
+                className="bg-adorzia-accent hover:bg-adorzia-accentHover flex items-center gap-2"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {isEditing ? 'Updating...' : 'Creating...'}
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4" />
+                    {isEditing ? 'Update Enhanced Course' : 'Create Enhanced Course'}
+                  </>
+                )}
               </Button>
             </div>
           </form>

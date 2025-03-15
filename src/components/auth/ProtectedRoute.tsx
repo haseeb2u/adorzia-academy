@@ -3,17 +3,53 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
-// Mock authentication - in a real app this would come from your auth provider
+// Improved authentication hook with more robust implementation
 const useAuth = () => {
   // For demo purposes we're simulating authentication state
-  // In a real application, this would check if the user is authenticated
-  return { 
-    isAuthenticated: true,
-    user: {
-      name: "Jane Doe",
-      email: "jane@example.com",
-      role: "admin" // Changed from "student" to "admin" for testing admin features
+  // In a real app, this would connect to a backend service
+  const storedUser = localStorage.getItem('adorziaUser');
+  const isAuthenticated = !!storedUser;
+  
+  let user = {
+    name: "Guest",
+    email: "",
+    role: "guest"
+  };
+  
+  if (isAuthenticated && storedUser) {
+    try {
+      user = JSON.parse(storedUser);
+    } catch (e) {
+      console.error("Failed to parse stored user data");
     }
+  }
+  
+  const signIn = (email: string, password: string) => {
+    // In a real app, this would validate credentials against a backend
+    // For demo, we'll authenticate any email with password longer than 5 chars
+    if (password.length >= 6) {
+      const userData = {
+        name: email.split('@')[0],
+        email: email,
+        role: email.includes('admin') ? 'admin' : 'student'
+      };
+      
+      localStorage.setItem('adorziaUser', JSON.stringify(userData));
+      return true;
+    }
+    return false;
+  };
+  
+  const signOut = () => {
+    localStorage.removeItem('adorziaUser');
+    console.info("User signed out");
+  };
+  
+  return { 
+    isAuthenticated,
+    user,
+    signIn,
+    signOut
   };
 };
 
