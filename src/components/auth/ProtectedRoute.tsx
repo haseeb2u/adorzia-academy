@@ -3,7 +3,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
-// Improved authentication hook with more robust implementation
+// Authentication hook with improved security
 const useAuth = () => {
   // For demo purposes we're simulating authentication state
   // In a real app, this would connect to a backend service
@@ -25,8 +25,25 @@ const useAuth = () => {
   }
   
   const signIn = (email: string, password: string) => {
-    // Admin hardcoded credentials
-    if (email === 'admin' && password === 'admin') {
+    // Check for admin user in localStorage (for updateable admin credentials)
+    const storedAdminEmail = localStorage.getItem('adminEmail');
+    const storedAdminPassword = localStorage.getItem('adminPassword');
+    
+    // Check against stored admin credentials if they exist
+    if (storedAdminEmail && storedAdminPassword) {
+      if (email === storedAdminEmail && password === storedAdminPassword) {
+        const userData = {
+          name: 'Administrator',
+          email: storedAdminEmail,
+          role: 'admin'
+        };
+        
+        localStorage.setItem('adorziaUser', JSON.stringify(userData));
+        return true;
+      }
+    } 
+    // Default admin fallback (only if no custom admin credentials set)
+    else if (email === 'admin' && password === 'admin') {
       const userData = {
         name: 'Administrator',
         email: 'admin@adorzia.com',
@@ -42,7 +59,6 @@ const useAuth = () => {
       const userData = {
         name: email.split('@')[0],
         email: email,
-        // Only assign admin role if using the admin credentials
         role: 'student'
       };
       
@@ -57,30 +73,41 @@ const useAuth = () => {
     console.info("User signed out");
   };
   
-  // New function to update admin credentials
+  // Function to update admin credentials
   const updateAdminCredentials = (newEmail: string, newPassword: string) => {
-    // In a real app, this would update credentials in a secure backend
-    // For this demo, we'll just update a flag in localStorage
+    // Verify current user is admin before allowing credential update
+    const currentUser = JSON.parse(localStorage.getItem('adorziaUser') || '{}');
+    if (currentUser.role !== 'admin') {
+      return false;
+    }
+    
     localStorage.setItem('adminEmail', newEmail);
     localStorage.setItem('adminPassword', newPassword);
+    
+    // Update current user email if admin is changing their own email
+    if (currentUser.email !== newEmail) {
+      currentUser.email = newEmail;
+      localStorage.setItem('adorziaUser', JSON.stringify(currentUser));
+    }
+    
     return true;
   };
   
-  // New function to check if a user exists
+  // Function to check if a user exists
   const userExists = (email: string) => {
     // In a real app, this would check against a user database
     // For this demo, we'll always return false to allow new registrations
     return false;
   };
   
-  // New function to create a new user with admin privileges
+  // Function to create a new user with admin privileges
   const createAdminUser = (name: string, email: string, password: string) => {
     // In a real app, this would create a new user with admin privileges in the database
     // For this demo, we'll simulate successful creation
     return true;
   };
   
-  // New function to invite a user to join as admin
+  // Function to invite a user to join as admin
   const inviteAdmin = (email: string, message: string = '') => {
     // In a real app, this would send an invitation email with a special sign-up link
     // For this demo, we'll simulate successful invitation
@@ -121,12 +148,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
   
-  // Role-based access check
-  if (requiredRole && user.role !== requiredRole) {
+  // Strict role-based access check for admin routes
+  if (requiredRole === 'admin' && user.role !== 'admin') {
     toast({
       variant: "destructive",
       title: "Access denied",
-      description: `You need ${requiredRole} privileges to access this page`,
+      description: "You need administrator privileges to access this page",
     });
     
     return <Navigate to="/dashboard" replace />;

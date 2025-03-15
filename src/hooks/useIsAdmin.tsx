@@ -1,29 +1,23 @@
 
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/components/auth/ProtectedRoute';
 
-// In a real app, this would check the user's role from your auth system
+// Hook to check if the current user has admin privileges
 const useIsAdmin = (): boolean => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const { user } = useAuth();
   
   useEffect(() => {
-    // For demo purposes, we'll use localStorage to toggle admin mode
-    // In a real application, this would verify admin status through your authentication system
+    // Check if the current user has admin role
+    setIsAdmin(user.role === 'admin');
+    
+    // For legacy compatibility - check localStorage as well
     const storedIsAdmin = localStorage.getItem('isAdmin') === 'true';
-    setIsAdmin(storedIsAdmin);
-    
-    // Listen for storage events to update admin state across tabs
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'isAdmin') {
-        setIsAdmin(e.newValue === 'true');
-      }
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
+    if (storedIsAdmin && user.role !== 'admin') {
+      // This ensures the UI reflects admin status even if not set in user object
+      setIsAdmin(true);
+    }
+  }, [user]);
   
   return isAdmin;
 };
