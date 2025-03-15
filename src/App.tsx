@@ -13,7 +13,10 @@ import MyCourses from "./pages/MyCourses";
 import AdminDashboard from "./pages/AdminDashboard";
 import CourseForm from "./pages/CourseForm";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-// Removed ToggleAdminMode import - will only be used in the admin panel
+import StyleBoxPage from "./pages/StyleBoxPage";
+import PartnersPage from "./pages/PartnersPage";
+import CertificationPage from "./pages/CertificationPage";
+import PricingPage from "./pages/PricingPage";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +30,12 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          
+          {/* New pages */}
+          <Route path="/stylebox" element={<StyleBoxPage />} />
+          <Route path="/partners" element={<PartnersPage />} />
+          <Route path="/certification" element={<CertificationPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
           
           {/* Protected routes */}
           <Route path="/dashboard" element={
@@ -60,7 +69,6 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        {/* Removed ToggleAdminMode component from here */}
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
