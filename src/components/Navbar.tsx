@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -44,8 +43,8 @@ const Navbar = () => {
   // Different navigation items based on context
   const landingNavItems = [
     { name: 'Home', href: '/' },
-    { name: 'Courses', href: '/courses' },
     { name: 'StyleBox', href: '#stylebox' },
+    { name: 'Partners', href: '#partners' },
     { name: 'Certification', href: '#certification' },
     { name: 'Pricing', href: '#pricing' },
   ];
@@ -53,7 +52,6 @@ const Navbar = () => {
   const studentNavItems = [
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'My Courses', href: '/my-courses' },
-    { name: 'Browse Courses', href: '/courses' },
   ];
   
   const adminNavItems = [
