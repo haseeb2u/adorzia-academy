@@ -5,6 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import CoursesPage from "./pages/CoursesPage";
+import DemoCourse from "./pages/DemoCourse";
 import NotFound from "./pages/NotFound";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -13,10 +15,7 @@ import MyCourses from "./pages/MyCourses";
 import AdminDashboard from "./pages/AdminDashboard";
 import CourseForm from "./pages/CourseForm";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import StyleBoxPage from "./pages/StyleBoxPage";
-import PartnersPage from "./pages/PartnersPage";
-import CertificationPage from "./pages/CertificationPage";
-import PricingPage from "./pages/PricingPage";
+// Removed ToggleAdminMode import - will only be used in the admin panel
 
 const queryClient = new QueryClient();
 
@@ -28,14 +27,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/courses" element={<CoursesPage />} />
+          <Route path="/courses/demo" element={<DemoCourse />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          
-          {/* New pages */}
-          <Route path="/stylebox" element={<StyleBoxPage />} />
-          <Route path="/partners" element={<PartnersPage />} />
-          <Route path="/certification" element={<CertificationPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
           
           {/* Protected routes */}
           <Route path="/dashboard" element={
@@ -69,6 +64,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        {/* Removed ToggleAdminMode component from here */}
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

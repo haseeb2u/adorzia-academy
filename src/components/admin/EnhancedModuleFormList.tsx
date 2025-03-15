@@ -12,8 +12,9 @@ import StyleBoxSection from './module-components/StyleBoxSection';
 import BadgeSection from './module-components/BadgeSection';
 import CommunitySection from './module-components/CommunitySection';
 
-// Define a complete EnhancedModuleFormData type that includes all required fields
-type EnhancedModuleFormData = EnhancedModule;
+interface EnhancedModuleFormData extends Omit<EnhancedModule, 'resources'> {
+  // We'll use this for the form
+}
 
 interface EnhancedModuleFormListProps {
   modules: EnhancedModuleFormData[];
@@ -29,7 +30,6 @@ const EnhancedModuleFormList: React.FC<EnhancedModuleFormListProps> = ({ modules
       id: newId, 
       title: '', 
       description: '',
-      resources: [], // Include the required resources array
       videoLectures: [],
       readings: [],
       quizzes: [],
