@@ -15,7 +15,7 @@ import MyCourses from "./pages/MyCourses";
 import AdminDashboard from "./pages/AdminDashboard";
 import CourseForm from "./pages/CourseForm";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import ToggleAdminMode from "./components/admin/ToggleAdminMode";
+// Removed ToggleAdminMode import - will only be used in the admin panel
 
 const queryClient = new QueryClient();
 
@@ -64,7 +64,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <ToggleAdminMode />
+        {/* Removed ToggleAdminMode component from here */}
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

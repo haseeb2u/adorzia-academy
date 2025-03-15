@@ -10,6 +10,19 @@ const useIsAdmin = (): boolean => {
     // In a real application, this would verify admin status through your authentication system
     const storedIsAdmin = localStorage.getItem('isAdmin') === 'true';
     setIsAdmin(storedIsAdmin);
+    
+    // Listen for storage events to update admin state across tabs
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'isAdmin') {
+        setIsAdmin(e.newValue === 'true');
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
   
   return isAdmin;

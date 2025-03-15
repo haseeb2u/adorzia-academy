@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -13,7 +12,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ContentManager from '@/components/admin/ContentManager';
 import useIsAdmin from '@/hooks/useIsAdmin';
-import { ChevronRight } from 'lucide-react';
 
 const Index = () => {
   // Check if user is admin
@@ -136,10 +134,6 @@ const Index = () => {
       category: "Technology"
     }
   ]);
-
-  // State to control how many courses to display initially
-  const [showMoreCourses, setShowMoreCourses] = useState(false);
-  const initialCoursesToShow = 3;
   
   return (
     <div className="min-h-screen">
@@ -172,29 +166,17 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredCourses.slice(0, showMoreCourses ? featuredCourses.length : initialCoursesToShow).map((course, index) => (
+            {/* Always show exactly 3 featured courses */}
+            {featuredCourses.slice(0, 3).map((course, index) => (
               <div key={course.id} className={`reveal ${index === 1 ? 'reveal-delay-1' : index === 2 ? 'reveal-delay-2' : ''}`}>
                 <CourseCard {...course} />
               </div>
             ))}
           </div>
           
-          {!showMoreCourses && featuredCourses.length > initialCoursesToShow && (
-            <div className="mt-8 text-center reveal">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowMoreCourses(true)}
-                className="gap-2"
-              >
-                Show More Certifications
-                <ChevronRight size={16} />
-              </Button>
-            </div>
-          )}
-          
-          {/* Additional Adorzia Courses Section */}
-          <div className="mt-20 text-center max-w-3xl mx-auto reveal">
-            <div className="flex justify-between items-center mb-6">
+          {/* Additional Adorzia Courses Section - Enhanced Layout */}
+          <div className="mt-20 reveal">
+            <div className="flex justify-between items-center mb-8">
               <h3 className="font-serif text-2xl">
                 Explore More <span className="text-adorzia-accent">Adorzia Programs</span>
               </h3>
@@ -208,19 +190,34 @@ const Index = () => {
               )}
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {additionalCourses.map((course, index) => (
                 <div 
                   key={course.id}
-                  className={`p-4 border border-adorzia-accent/20 rounded-lg bg-adorzia-accent/5 hover:bg-adorzia-accent/10 transition-colors reveal ${index % 2 === 1 ? 'reveal-delay-1' : ''}`}
+                  className={`glass-card rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 reveal ${index % 2 === 1 ? 'reveal-delay-1' : ''}`}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0">
-                      <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
+                  <div className="flex flex-col sm:flex-row h-full">
+                    <div className="sm:w-1/3 h-32 sm:h-auto overflow-hidden">
+                      <img 
+                        src={course.image} 
+                        alt={course.title} 
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                      />
                     </div>
-                    <div className="flex flex-col items-start text-left">
-                      <span className="font-medium text-lg">{course.title}</span>
-                      <Badge className="bg-adorzia-accent text-white mt-1">New</Badge>
+                    <div className="sm:w-2/3 p-5 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-start mb-2">
+                          <h4 className="font-medium text-lg">{course.title}</h4>
+                          <Badge className="bg-adorzia-accent text-white">New</Badge>
+                        </div>
+                        <p className="text-adorzia-midGray text-sm mb-3 line-clamp-2">{course.description}</p>
+                      </div>
+                      <div className="flex items-center justify-between mt-auto">
+                        <div className="text-sm text-adorzia-midGray">{course.duration} • {course.level}</div>
+                        <Button variant="ghost" size="sm" className="text-adorzia-accent hover:text-adorzia-accentHover">
+                          Learn More
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>

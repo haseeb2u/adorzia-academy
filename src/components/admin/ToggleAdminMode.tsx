@@ -2,9 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Shield, ShieldOff } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const ToggleAdminMode = () => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const { toast } = useToast();
   
   useEffect(() => {
     const storedIsAdmin = localStorage.getItem('isAdmin') === 'true';
@@ -16,6 +18,12 @@ const ToggleAdminMode = () => {
     localStorage.setItem('isAdmin', newValue.toString());
     setIsAdmin(newValue);
     
+    // Show toast notification
+    toast({
+      title: newValue ? "Admin mode enabled" : "Admin mode disabled",
+      description: newValue ? "You can now manage content on the site" : "Content management has been disabled",
+    });
+    
     // Reload to apply changes
     window.location.reload();
   };
@@ -24,18 +32,18 @@ const ToggleAdminMode = () => {
     <Button 
       variant="outline" 
       size="sm" 
-      className="fixed bottom-4 right-4 z-50 bg-white shadow-md"
+      className="flex items-center gap-2"
       onClick={toggleAdminMode}
     >
       {isAdmin ? (
         <>
-          <ShieldOff size={16} className="mr-2" />
-          Exit Admin Mode
+          <ShieldOff size={16} />
+          Disable Content Management
         </>
       ) : (
         <>
-          <Shield size={16} className="mr-2" />
-          Enter Admin Mode
+          <Shield size={16} />
+          Enable Content Management
         </>
       )}
     </Button>
