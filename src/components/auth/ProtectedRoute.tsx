@@ -12,17 +12,18 @@ const useAuth = () => {
     user: {
       name: "Jane Doe",
       email: "jane@example.com",
-      role: "student"
+      role: "admin" // Changed from "student" to "admin" for testing admin features
     }
   };
 };
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  requiredRole?: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
+  const { isAuthenticated, user } = useAuth();
   const location = useLocation();
   const { toast } = useToast();
   
@@ -38,7 +39,19 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
   
+  // Role-based access check
+  if (requiredRole && user.role !== requiredRole) {
+    toast({
+      variant: "destructive",
+      title: "Access denied",
+      description: `You need ${requiredRole} privileges to access this page`,
+    });
+    
+    return <Navigate to="/dashboard" replace />;
+  }
+  
   return <>{children}</>;
 };
 
 export default ProtectedRoute;
+export { useAuth };

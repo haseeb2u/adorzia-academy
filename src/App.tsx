@@ -12,6 +12,8 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import MyCourses from "./pages/MyCourses";
+import AdminDashboard from "./pages/AdminDashboard";
+import CourseForm from "./pages/CourseForm";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -38,6 +40,23 @@ const App = () => (
           <Route path="/my-courses" element={
             <ProtectedRoute>
               <MyCourses />
+            </ProtectedRoute>
+          } />
+          
+          {/* Admin routes */}
+          <Route path="/admin" element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/courses/new" element={
+            <ProtectedRoute requiredRole="admin">
+              <CourseForm />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/courses/edit/:id" element={
+            <ProtectedRoute requiredRole="admin">
+              <CourseForm />
             </ProtectedRoute>
           } />
           
