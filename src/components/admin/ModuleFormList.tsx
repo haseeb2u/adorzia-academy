@@ -17,9 +17,9 @@ const ModuleFormList: React.FC<ModuleFormListProps> = ({ modules, setModules }) 
     setModules([...modules, { 
       id: newId, 
       title: '', 
-      theory: '', 
-      practice: '', 
-      difficulty: 'Easy' 
+      description: '',
+      duration: 2,
+      order: modules.length + 1
     }]);
   };
 
@@ -30,7 +30,7 @@ const ModuleFormList: React.FC<ModuleFormListProps> = ({ modules, setModules }) 
     setModules(modules.filter(module => module.id !== id));
   };
 
-  const updateModule = (id: string, field: keyof ModuleFormData, value: string) => {
+  const updateModule = (id: string, field: keyof ModuleFormData, value: string | number) => {
     setModules(
       modules.map(module => 
         module.id === id 
@@ -72,11 +72,11 @@ const ModuleFormList: React.FC<ModuleFormListProps> = ({ modules, setModules }) 
             
             <div>
               <label className="block text-sm font-medium mb-1">
-                Theory Content
+                Module Description
               </label>
               <Textarea 
-                value={module.theory} 
-                onChange={(e) => updateModule(module.id, 'theory', e.target.value)}
+                value={module.description} 
+                onChange={(e) => updateModule(module.id, 'description', e.target.value)}
                 placeholder="e.g., What is Fashion Design? History & Evolution."
                 className="min-h-[80px]"
               />
@@ -84,33 +84,14 @@ const ModuleFormList: React.FC<ModuleFormListProps> = ({ modules, setModules }) 
             
             <div>
               <label className="block text-sm font-medium mb-1">
-                StyleBox Practice
+                Module Duration (hours)
               </label>
-              <Textarea 
-                value={module.practice} 
-                onChange={(e) => updateModule(module.id, 'practice', e.target.value)}
-                placeholder="e.g., Create a Minimalist Streetwear Outfit."
-                className="min-h-[80px]"
+              <Input 
+                type="number"
+                value={module.duration} 
+                onChange={(e) => updateModule(module.id, 'duration', parseInt(e.target.value))}
+                placeholder="e.g., 2"
               />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Difficulty Level
-              </label>
-              <select 
-                value={module.difficulty} 
-                onChange={(e) => updateModule(
-                  module.id, 
-                  'difficulty', 
-                  e.target.value as 'Easy' | 'Medium' | 'Hard'
-                )}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
-              </select>
             </div>
           </div>
         </div>
