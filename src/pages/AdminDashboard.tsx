@@ -1,93 +1,139 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { useAuth } from '@/components/auth/ProtectedRoute';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { 
+  Users, Book, Award, Plus, 
+  GraduationCap, Settings, 
+  BarChart, MessageSquare 
+} from 'lucide-react';
 import AdminCourseList from '@/components/admin/AdminCourseList';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BookOpen, Graduation, Users, Award, Settings } from 'lucide-react';
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from '@/components/ui/table';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  
+
   return (
-    <div className="min-h-screen bg-adorzia-lightGray">
+    <div className="min-h-screen bg-gray-100">
       <Navbar />
-      
-      <div className="bg-adorzia-primary text-white py-8">
-        <div className="container max-w-7xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold">Adorzia Academy Admin</h1>
-              <p className="text-adorzia-lightGray mt-2">Manage courses, students, and certifications</p>
-            </div>
-            <Button 
-              onClick={() => navigate('/admin/courses/new')}
-              className="bg-adorzia-tertiary hover:bg-adorzia-secondary text-white"
-            >
-              Create New Course
-            </Button>
-          </div>
+
+      <div className="container mx-auto py-10">
+        <Card className="mb-5">
+          <CardHeader>
+            <CardTitle className="text-2xl">Admin Dashboard</CardTitle>
+          </CardHeader>
+          <CardContent>
+            Welcome to the Adorzia Academy admin dashboard. Manage courses, users, and settings here.
+          </CardContent>
+        </Card>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <Card className="hover:shadow-md transition-shadow duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium flex items-center">
+                <Users className="mr-2 h-4 w-4" />
+                Total Students
+              </CardTitle>
+              <Settings className="h-4 w-4 text-gray-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">3,457</div>
+              <p className="text-sm text-gray-500">
+                +72 since last week
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-md transition-shadow duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium flex items-center">
+                <Book className="mr-2 h-4 w-4" />
+                Total Courses
+              </CardTitle>
+              <Settings className="h-4 w-4 text-gray-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">12</div>
+              <p className="text-sm text-gray-500">
+                +3 since last month
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-md transition-shadow duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium flex items-center">
+                <Award className="mr-2 h-4 w-4" />
+                Certifications Issued
+              </CardTitle>
+              <Settings className="h-4 w-4 text-gray-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">2,356</div>
+              <p className="text-sm text-gray-500">
+                +125 since last month
+              </p>
+            </CardContent>
+          </Card>
         </div>
+
+        <Card className="mb-5">
+          <CardHeader className="flex items-center justify-between">
+            <CardTitle>Courses</CardTitle>
+            <Button onClick={() => navigate('/admin/courses/new')}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Course
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <AdminCourseList />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Activity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Activity</TableHead>
+                  <TableHead>User</TableHead>
+                  <TableHead>Timestamp</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>New user signed up</TableCell>
+                  <TableCell>john.doe@example.com</TableCell>
+                  <TableCell>2 minutes ago</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Course "Fashion Design" created</TableCell>
+                  <TableCell>admin@adorzia.com</TableCell>
+                  <TableCell>1 hour ago</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>User enrolled in "Textile Design"</TableCell>
+                  <TableCell>jane.smith@example.com</TableCell>
+                  <TableCell>3 hours ago</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </div>
-      
-      <div className="container max-w-7xl mx-auto px-4 my-8">
-        <Tabs defaultValue="courses" className="w-full">
-          <TabsList className="mb-8 bg-white p-1 flex flex-wrap">
-            <TabsTrigger value="courses" className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              Courses
-            </TabsTrigger>
-            <TabsTrigger value="students" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Students
-            </TabsTrigger>
-            <TabsTrigger value="certifications" className="flex items-center gap-2">
-              <Award className="h-4 w-4" />
-              Certifications
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              Settings
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="courses" className="space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-xl font-bold mb-4">Course Management</h2>
-              <AdminCourseList />
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="students" className="space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-xl font-bold mb-4">Student Management</h2>
-              <p className="text-adorzia-midGray">Manage student enrollments, progress, and performance.</p>
-              {/* Student management components would go here */}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="certifications" className="space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-xl font-bold mb-4">Certification Management</h2>
-              <p className="text-adorzia-midGray">Issue and revoke certifications for completed courses.</p>
-              {/* Certification management components would go here */}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="settings" className="space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-xl font-bold mb-4">Academy Settings</h2>
-              <p className="text-adorzia-midGray">Configure academy-wide settings and appearance.</p>
-              {/* Settings components would go here */}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-      
+
       <Footer />
     </div>
   );

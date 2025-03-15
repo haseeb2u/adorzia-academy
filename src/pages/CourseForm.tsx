@@ -19,9 +19,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import ModuleFormList from '@/components/admin/ModuleFormList';
 import { useToast } from '@/hooks/use-toast';
 import { ChevronLeft, Save } from 'lucide-react';
+import EnhancedModuleFormList from '@/components/admin/EnhancedModuleFormList';
+import { EnhancedModule } from '@/types/course';
 
 // Define form schema
 const courseFormSchema = z.object({
@@ -42,6 +43,9 @@ const courseFormSchema = z.object({
     message: "Access description must be at least 5 characters.",
   }),
   hasCertification: z.boolean().default(false),
+  communityForums: z.boolean().default(true),
+  liveQAsessions: z.boolean().default(true),
+  badgesSystem: z.boolean().default(true),
 });
 
 type CourseFormValues = z.infer<typeof courseFormSchema>;
@@ -56,31 +60,81 @@ const mockCourseData = {
     accessType: 'Registered' as const,
     accessDescription: 'Open to All Users',
     hasCertification: true,
+    communityForums: true,
+    liveQAsessions: true,
+    badgesSystem: true,
     modules: [
       {
+        id: 'module-1',
         title: "Introduction to Fashion Design",
-        theory: "What is Fashion Design? History & Evolution.",
-        practice: "Create a Minimalist Streetwear Outfit.",
-        difficulty: "Easy" as const,
-      },
-      {
-        title: "Understanding Fabrics & Materials",
-        theory: "Types of fabrics, textures, and material selection.",
-        practice: "Design a Casual T-shirt with fabric constraints.",
-        difficulty: "Medium" as const,
+        description: "An overview of fashion design principles and history",
+        videoLectures: [
+          {
+            id: 'video-1',
+            title: "Fashion Design Fundamentals",
+            type: 'video' as const,
+            content: "Learn the basics of fashion design in this introductory video",
+            duration: 15,
+            url: "https://example.com/video1"
+          }
+        ],
+        readings: [
+          {
+            id: 'reading-1',
+            title: "Fashion Design Through History",
+            type: 'reading' as const,
+            content: "Explore how fashion has evolved through different eras",
+            author: "Jane Smith"
+          }
+        ],
+        quizzes: [
+          {
+            id: 'quiz-1',
+            title: "Fashion Basics Quiz",
+            type: 'quiz' as const,
+            content: "Test your understanding of fashion design principles",
+            questions: [],
+            passingScore: 70
+          }
+        ],
+        challenge: {
+          id: 'challenge-1',
+          title: "Create a Minimalist Streetwear Outfit",
+          type: 'challenge' as const,
+          content: "Design a modern, sleek, and wearable street outfit",
+          difficulty: "Easy" as const,
+          requirements: [
+            "Use a neutral color palette (white, black, grey, beige)",
+            "Create oversized or structured fits",
+            "Use cotton, denim, or soft fleece fabrics"
+          ],
+          evaluation: {
+            autoFeedback: true,
+            peerReview: true,
+            expertAssessment: true
+          }
+        },
+        badge: {
+          id: 'badge-1',
+          name: "Fashion Pioneer",
+          description: "Awarded for completing the introduction to fashion design",
+          imageUrl: "/badges/fashion-pioneer.png"
+        },
+        forum: {
+          discussions: []
+        },
+        evaluationSystem: {
+          autoFeedback: true,
+          peerReview: true,
+          expertAssessment: true
+        },
+        duration: 2,
+        order: 1
       },
       // Additional modules would be included here
     ]
   }
 };
-
-export interface ModuleFormData {
-  id: string;
-  title: string;
-  theory: string;
-  practice: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-}
 
 const CourseForm = () => {
   const { id } = useParams();
@@ -88,17 +142,47 @@ const CourseForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  // State for modules
-  const [modules, setModules] = useState<ModuleFormData[]>(
+  // State for enhanced modules
+  const [modules, setModules] = useState<EnhancedModule[]>(
     isEditing && id && mockCourseData[id as keyof typeof mockCourseData]?.modules 
-      ? mockCourseData[id as keyof typeof mockCourseData].modules.map((m, idx) => ({
-          id: `module-${idx}`,
-          title: m.title,
-          theory: m.theory,
-          practice: m.practice,
-          difficulty: m.difficulty,
-        }))
-      : [{ id: 'module-0', title: '', theory: '', practice: '', difficulty: 'Easy' }]
+      ? mockCourseData[id as keyof typeof mockCourseData].modules
+      : [{
+          id: `module-${Date.now()}`,
+          title: '',
+          description: '',
+          videoLectures: [],
+          readings: [],
+          quizzes: [],
+          challenge: {
+            id: `challenge-${Date.now()}`,
+            title: '',
+            type: 'challenge',
+            content: '',
+            difficulty: 'Medium',
+            requirements: [],
+            evaluation: {
+              autoFeedback: true,
+              peerReview: false,
+              expertAssessment: true
+            }
+          },
+          badge: {
+            id: `badge-${Date.now()}`,
+            name: '',
+            description: '',
+            imageUrl: ''
+          },
+          forum: {
+            discussions: []
+          },
+          evaluationSystem: {
+            autoFeedback: true,
+            peerReview: true,
+            expertAssessment: true
+          },
+          duration: 2,
+          order: 1
+        }]
   );
 
   // Set up form with default values
@@ -113,6 +197,9 @@ const CourseForm = () => {
           accessType: mockCourseData[id as keyof typeof mockCourseData].accessType,
           accessDescription: mockCourseData[id as keyof typeof mockCourseData].accessDescription,
           hasCertification: mockCourseData[id as keyof typeof mockCourseData].hasCertification,
+          communityForums: mockCourseData[id as keyof typeof mockCourseData].communityForums,
+          liveQAsessions: mockCourseData[id as keyof typeof mockCourseData].liveQAsessions,
+          badgesSystem: mockCourseData[id as keyof typeof mockCourseData].badgesSystem,
         }
       : {
           title: '',
@@ -122,6 +209,9 @@ const CourseForm = () => {
           accessType: 'Registered',
           accessDescription: 'Open to All Users',
           hasCertification: true,
+          communityForums: true,
+          liveQAsessions: true,
+          badgesSystem: true,
         },
   });
 
@@ -138,25 +228,25 @@ const CourseForm = () => {
 
     // Check if all modules have required fields
     const incompleteModules = modules.some(
-      module => !module.title || !module.theory || !module.practice
+      module => !module.title || !module.description || !module.challenge.title
     );
 
     if (incompleteModules) {
       toast({
         variant: "destructive",
         title: "Validation Error",
-        description: "All modules must have a title, theory, and practice content",
+        description: "All modules must have a title, description, and StyleBox challenge",
       });
       return;
     }
 
     // In a real app, we would send this data to an API
     console.log('Form values:', values);
-    console.log('Modules:', modules);
+    console.log('Enhanced Modules:', modules);
 
     toast({
       title: `Course ${isEditing ? 'updated' : 'created'} successfully`,
-      description: `${values.title} has been ${isEditing ? 'updated' : 'created'}.`,
+      description: `${values.title} has been ${isEditing ? 'updated' : 'created'} with enhanced module structure.`,
     });
 
     // Redirect to admin dashboard
@@ -186,8 +276,8 @@ const CourseForm = () => {
           <h1 className="text-3xl font-bold">{isEditing ? 'Edit Course' : 'Create New Course'}</h1>
           <p className="text-adorzia-lightGray mt-2">
             {isEditing 
-              ? 'Update course details and modules' 
-              : 'Define course structure with theory and StyleBox challenges'}
+              ? 'Update course details and enhanced modules with videos, readings, quizzes, and StyleBox challenges' 
+              : 'Define comprehensive course structure with theory, practice, and evaluation systems'}
           </p>
         </div>
       </div>
@@ -324,39 +414,118 @@ const CourseForm = () => {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="hasCertification"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                      <FormControl>
-                        <input
-                          type="checkbox"
-                          checked={field.value}
-                          onChange={field.onChange}
-                          className="h-4 w-4 mt-1"
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>
-                          Offer Certification
-                        </FormLabel>
-                        <FormDescription>
-                          Students will receive a certificate upon completion.
-                        </FormDescription>
-                      </div>
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="hasCertification"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <input
+                            type="checkbox"
+                            checked={field.value}
+                            onChange={field.onChange}
+                            className="h-4 w-4 mt-1"
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>
+                            Offer Certification
+                          </FormLabel>
+                          <FormDescription>
+                            Students will receive a certificate upon completion.
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="badgesSystem"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <input
+                            type="checkbox"
+                            checked={field.value}
+                            onChange={field.onChange}
+                            className="h-4 w-4 mt-1"
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>
+                            Enable Badges System
+                          </FormLabel>
+                          <FormDescription>
+                            Award badges for module completion and achievements.
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="communityForums"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <input
+                            type="checkbox"
+                            checked={field.value}
+                            onChange={field.onChange}
+                            className="h-4 w-4 mt-1"
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>
+                            Enable Community Forums
+                          </FormLabel>
+                          <FormDescription>
+                            Allow students to discuss and interact on module forums.
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="liveQAsessions"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <input
+                            type="checkbox"
+                            checked={field.value}
+                            onChange={field.onChange}
+                            className="h-4 w-4 mt-1"
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>
+                            Enable Live Q&A Sessions
+                          </FormLabel>
+                          <FormDescription>
+                            Schedule live sessions with instructors for each module.
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>Course Modules</CardTitle>
+                <CardTitle>Enhanced Course Modules</CardTitle>
               </CardHeader>
               <CardContent>
-                <ModuleFormList
+                <EnhancedModuleFormList
                   modules={modules}
                   setModules={setModules}
                 />
@@ -369,7 +538,7 @@ const CourseForm = () => {
               </Button>
               <Button type="submit" className="bg-adorzia-accent hover:bg-adorzia-accentHover flex items-center gap-2">
                 <Save className="h-4 w-4" />
-                {isEditing ? 'Update Course' : 'Create Course'}
+                {isEditing ? 'Update Enhanced Course' : 'Create Enhanced Course'}
               </Button>
             </div>
           </form>
