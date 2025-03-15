@@ -2,11 +2,26 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+
+// Mock authentication - in a real app this would come from your auth provider
+const useAuth = () => {
+  // For demo purposes, let's just return true to simulate being logged in
+  // In a real application, this would check if the user is authenticated
+  return { 
+    isAuthenticated: true,
+    // Mock function to simulate logout
+    signOut: () => console.log('User signed out')
+  };
+};
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,13 +40,28 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleSignOut = () => {
+    signOut();
+    navigate('/');
+  };
+
   const navItems = [
-    { name: 'Home', href: '#' },
-    { name: 'Courses', href: '#courses' },
+    { name: 'Home', href: '/' },
+    { name: 'Courses', href: '/courses' },
     { name: 'StyleBox', href: '#stylebox' },
     { name: 'Certification', href: '#certification' },
     { name: 'Pricing', href: '#pricing' },
   ];
+
+  const authNavItems = [
+    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'My Courses', href: '/my-courses' },
+  ];
+
+  // Combine navigation items based on authentication status
+  const displayedNavItems = isAuthenticated 
+    ? [...navItems.slice(0, 2), ...authNavItems, ...navItems.slice(2)]
+    : navItems;
 
   return (
     <header 
@@ -43,33 +73,64 @@ const Navbar = () => {
       )}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <a 
-          href="#" 
+        <Link 
+          to="/" 
           className="text-2xl font-serif font-bold tracking-tight text-adorzia-primary"
         >
           Adorzia <span className="text-adorzia-tertiary">Academy</span>
-        </a>
+        </Link>
 
         {/* Desktop menu */}
         <nav className="hidden md:flex items-center space-x-8">
-          {navItems.map((item) => (
-            <a
+          {displayedNavItems.map((item) => (
+            <Link
               key={item.name}
-              href={item.href}
-              className="font-medium text-adorzia-midGray hover:text-adorzia-primary transition-colors duration-200"
+              to={item.href.startsWith('#') ? `/${item.href}` : item.href}
+              className={cn(
+                "font-medium text-adorzia-midGray hover:text-adorzia-primary transition-colors duration-200",
+                location.pathname === item.href && "text-adorzia-primary"
+              )}
             >
               {item.name}
-            </a>
+            </Link>
           ))}
         </nav>
 
         <div className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost" className="font-medium">
-            Log in
-          </Button>
-          <Button className="bg-adorzia-primary hover:bg-adorzia-secondary text-white">
-            Join Now
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <Button 
+                variant="ghost" 
+                className="font-medium"
+                onClick={handleSignOut}
+              >
+                Sign Out
+              </Button>
+              <Button 
+                className="bg-adorzia-primary hover:bg-adorzia-secondary text-white"
+                onClick={() => navigate('/dashboard')}
+              >
+                <User className="mr-2 h-4 w-4" />
+                Account
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button 
+                variant="ghost" 
+                className="font-medium"
+                onClick={() => navigate('/signin')}
+              >
+                Log in
+              </Button>
+              <Button 
+                className="bg-adorzia-primary hover:bg-adorzia-secondary text-white"
+                onClick={() => navigate('/signup')}
+              >
+                Join Now
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile menu button */}
@@ -94,24 +155,66 @@ const Navbar = () => {
         )}
       >
         <nav className="flex flex-col space-y-6 py-8">
-          {navItems.map((item) => (
-            <a
+          {displayedNavItems.map((item) => (
+            <Link
               key={item.name}
-              href={item.href}
-              className="font-medium text-xl text-adorzia-darkGray hover:text-adorzia-primary transition-colors duration-200"
+              to={item.href.startsWith('#') ? `/${item.href}` : item.href}
+              className={cn(
+                "font-medium text-xl text-adorzia-darkGray hover:text-adorzia-primary transition-colors duration-200",
+                location.pathname === item.href && "text-adorzia-primary"
+              )}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {item.name}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="mt-auto mb-10 flex flex-col space-y-4">
-          <Button variant="ghost" className="font-medium w-full justify-center text-lg py-6">
-            Log in
-          </Button>
-          <Button className="bg-adorzia-primary hover:bg-adorzia-secondary text-white w-full justify-center text-lg py-6">
-            Join Now
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <Button 
+                variant="ghost" 
+                className="font-medium w-full justify-center text-lg py-6"
+                onClick={() => {
+                  handleSignOut();
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                Sign Out
+              </Button>
+              <Button 
+                className="bg-adorzia-primary hover:bg-adorzia-secondary text-white w-full justify-center text-lg py-6"
+                onClick={() => {
+                  navigate('/dashboard');
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                My Account
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button 
+                variant="ghost" 
+                className="font-medium w-full justify-center text-lg py-6"
+                onClick={() => {
+                  navigate('/signin');
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                Log in
+              </Button>
+              <Button 
+                className="bg-adorzia-primary hover:bg-adorzia-secondary text-white w-full justify-center text-lg py-6"
+                onClick={() => {
+                  navigate('/signup');
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                Join Now
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>
