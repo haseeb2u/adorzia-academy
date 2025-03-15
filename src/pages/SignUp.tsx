@@ -11,7 +11,7 @@ import {
   CardContent, 
   CardFooter 
 } from '@/components/ui/card';
-import { UserPlus, Mail, Lock, User, Info } from 'lucide-react';
+import { UserPlus, Mail, Lock, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -26,7 +26,6 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/auth/ProtectedRoute';
 import Navbar from '@/components/Navbar';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
@@ -44,7 +43,7 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { isAuthenticated } = useAuth();
+  const { signIn, isAuthenticated } = useAuth();
   
   // Check if user is already authenticated
   useEffect(() => {
@@ -71,7 +70,7 @@ const SignUp = () => {
       const userData = {
         name: data.name,
         email: data.email,
-        role: 'student' // New users are always students
+        role: data.email.includes('admin') ? 'admin' : 'student'
       };
       
       localStorage.setItem('adorziaUser', JSON.stringify(userData));
@@ -107,13 +106,6 @@ const SignUp = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Alert className="mb-4 bg-blue-50 border-blue-200">
-                <Info className="h-4 w-4 text-blue-500" />
-                <AlertDescription className="text-sm text-blue-700">
-                  <p>New users are registered as students. To access admin features, use the admin credentials on the sign in page.</p>
-                </AlertDescription>
-              </Alert>
-              
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField

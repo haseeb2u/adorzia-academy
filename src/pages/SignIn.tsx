@@ -28,8 +28,8 @@ import { useAuth } from '@/components/auth/ProtectedRoute';
 import Navbar from '@/components/Navbar';
 
 const formSchema = z.object({
-  email: z.string().min(1, { message: "Email is required" }),
-  password: z.string().min(1, { message: "Password is required" }),
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -65,20 +65,6 @@ const SignIn = () => {
       const success = signIn(data.email, data.password);
       
       if (success) {
-        // Check if the user is an admin
-        const storedUser = localStorage.getItem('adorziaUser');
-        if (storedUser) {
-          const user = JSON.parse(storedUser);
-          if (user.role === 'admin') {
-            toast({
-              title: "Welcome Admin!",
-              description: "You've signed in as an administrator.",
-            });
-            navigate('/admin');
-            return;
-          }
-        }
-        
         toast({
           title: "Welcome back!",
           description: "You've successfully signed in.",
@@ -120,13 +106,14 @@ const SignIn = () => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Username or Email</FormLabel>
+                        <FormLabel>Email</FormLabel>
                         <FormControl>
                           <div className="relative">
                             <Mail className="absolute left-3 top-2.5 h-5 w-5 text-adorzia-midGray" />
                             <Input
-                              placeholder="username or email"
+                              placeholder="your.email@example.com"
                               className="pl-10"
+                              type="email"
                               {...field}
                             />
                           </div>

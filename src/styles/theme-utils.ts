@@ -21,7 +21,7 @@ export const getColor = (colorName: keyof typeof adorziaColors, opacity?: number
 };
 
 // Get a color for different course/skill levels
-export const getLevelColor = (level: 'Beginner' | 'Intermediate' | 'Expert' | 'Professional'): string => {
+export const getLevelColor = (level: 'Beginner' | 'Intermediate' | 'Expert'): string => {
   switch (level) {
     case 'Beginner':
       return adorziaColors.beginnerLevel;
@@ -29,15 +29,13 @@ export const getLevelColor = (level: 'Beginner' | 'Intermediate' | 'Expert' | 'P
       return adorziaColors.intermediateLevel;
     case 'Expert':
       return adorziaColors.expertLevel;
-    case 'Professional':
-      return adorziaColors.accent;
     default:
       return adorziaColors.primary;
   }
 };
 
 // Get background and text colors for different levels
-export const getLevelStyles = (level: 'Beginner' | 'Intermediate' | 'Expert' | 'Professional'): { bg: string; text: string } => {
+export const getLevelStyles = (level: 'Beginner' | 'Intermediate' | 'Expert'): { bg: string; text: string } => {
   switch (level) {
     case 'Beginner':
       return { bg: '#F7EDE2', text: adorziaColors.beginnerLevel };
@@ -45,8 +43,6 @@ export const getLevelStyles = (level: 'Beginner' | 'Intermediate' | 'Expert' | '
       return { bg: '#F9F5EB', text: adorziaColors.intermediateLevel };
     case 'Expert':
       return { bg: '#F5E6E6', text: adorziaColors.expertLevel };
-    case 'Professional':
-      return { bg: '#F5E6F5', text: adorziaColors.accent };
     default:
       return { bg: '#F1F5F9', text: adorziaColors.darkGray };
   }
