@@ -6,9 +6,10 @@
 
 export const adorziaColors = {
   // Core brand colors
-  blue: '#33C3F0',
-  lightBlue: '#6AD1F7',
-  darkBlue: '#1EAEDB',
+  primary: '#6F1D1B',     // Deep burgundy
+  secondary: '#99582A',   // Rust brown
+  tertiary: '#BB9457',    // Caramel/gold
+  dark: '#432818',        // Dark brown
   
   // Neutral palette
   gray: '#F6F6F7',
@@ -18,8 +19,8 @@ export const adorziaColors = {
   white: '#FFFFFF',
   
   // Accent colors
-  accent: '#9b87f5',
-  accentHover: '#7E69AB',
+  accent: '#BB9457',      // Using the caramel/gold as accent
+  accentHover: '#99582A', // Using rust brown as hover state
   
   // Status colors
   success: '#10B981',
@@ -28,14 +29,14 @@ export const adorziaColors = {
   info: '#3B82F6',
   
   // Level indicators
-  beginnerLevel: '#3B82F6',  // Blue
-  intermediateLevel: '#8B5CF6', // Purple
-  expertLevel: '#F59E0B',  // Amber
+  beginnerLevel: '#99582A',   // Rust brown for beginner
+  intermediateLevel: '#BB9457', // Caramel/gold for intermediate
+  expertLevel: '#6F1D1B',    // Deep burgundy for expert
 }
 
 export const adorziaGradients = {
-  primary: `linear-gradient(to right, ${adorziaColors.accent}, ${adorziaColors.lightBlue})`,
-  secondary: `linear-gradient(to right, ${adorziaColors.darkGray}, ${adorziaColors.midGray})`,
+  primary: `linear-gradient(to right, ${adorziaColors.primary}, ${adorziaColors.secondary})`,
+  secondary: `linear-gradient(to right, ${adorziaColors.dark}, ${adorziaColors.tertiary})`,
   accent: `linear-gradient(135deg, ${adorziaColors.accent}, ${adorziaColors.accentHover})`,
   card: `linear-gradient(to bottom right, ${adorziaColors.white}, ${adorziaColors.lightGray})`,
 }
