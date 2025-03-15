@@ -11,7 +11,7 @@ import {
   CardContent, 
   CardFooter 
 } from '@/components/ui/card';
-import { LogIn, Mail, Lock } from 'lucide-react';
+import { LogIn, Mail, Lock, Info } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -26,10 +26,11 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/auth/ProtectedRoute';
 import Navbar from '@/components/Navbar';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const formSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  email: z.string().min(1, { message: "Email is required" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -65,6 +66,20 @@ const SignIn = () => {
       const success = signIn(data.email, data.password);
       
       if (success) {
+        // Check if the user is an admin
+        const storedUser = localStorage.getItem('adorziaUser');
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          if (user.role === 'admin') {
+            toast({
+              title: "Welcome Admin!",
+              description: "You've signed in as an administrator.",
+            });
+            navigate('/admin');
+            return;
+          }
+        }
+        
         toast({
           title: "Welcome back!",
           description: "You've successfully signed in.",
@@ -99,6 +114,14 @@ const SignIn = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              <Alert className="mb-4 bg-blue-50 border-blue-200">
+                <Info className="h-4 w-4 text-blue-500" />
+                <AlertDescription className="text-sm text-blue-700">
+                  <p><strong>Admin access:</strong> Use username <code className="bg-blue-100 px-1 rounded">admin</code> and password <code className="bg-blue-100 px-1 rounded">admin</code></p>
+                  <p className="mt-1"><strong>Regular user:</strong> Use any email with password of at least 6 characters</p>
+                </AlertDescription>
+              </Alert>
+              
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField
@@ -106,14 +129,13 @@ const SignIn = () => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>Username or Email</FormLabel>
                         <FormControl>
                           <div className="relative">
                             <Mail className="absolute left-3 top-2.5 h-5 w-5 text-adorzia-midGray" />
                             <Input
-                              placeholder="your.email@example.com"
+                              placeholder="username or email"
                               className="pl-10"
-                              type="email"
                               {...field}
                             />
                           </div>

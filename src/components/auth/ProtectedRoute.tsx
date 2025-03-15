@@ -25,13 +25,25 @@ const useAuth = () => {
   }
   
   const signIn = (email: string, password: string) => {
-    // In a real app, this would validate credentials against a backend
-    // For demo, we'll authenticate any email with password longer than 5 chars
+    // Admin hardcoded credentials
+    if (email === 'admin' && password === 'admin') {
+      const userData = {
+        name: 'Administrator',
+        email: 'admin@adorzia.com',
+        role: 'admin'
+      };
+      
+      localStorage.setItem('adorziaUser', JSON.stringify(userData));
+      return true;
+    }
+    
+    // For regular users, we'll authenticate any email with password longer than 5 chars
     if (password.length >= 6) {
       const userData = {
         name: email.split('@')[0],
         email: email,
-        role: email.includes('admin') ? 'admin' : 'student'
+        // Only assign admin role if using the admin credentials
+        role: 'student'
       };
       
       localStorage.setItem('adorziaUser', JSON.stringify(userData));
