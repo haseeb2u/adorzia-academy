@@ -26,7 +26,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
   rating,
   category,
 }) => {
-  const levelStyle = getLevelStyles(level as 'Beginner' | 'Intermediate' | 'Expert');
+  const levelStyle = getLevelStyles(level as 'Beginner' | 'Intermediate' | 'Expert' | 'Professional');
   
   return (
     <div className="card group h-full flex flex-col overflow-hidden">

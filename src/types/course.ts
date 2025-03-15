@@ -116,6 +116,19 @@ export interface EnhancedCourse {
   }[];
 }
 
+// Adorzia Certification Courses
+export interface AdorziaCourse {
+  id: string;
+  title: string;
+  acronym: string; // e.g., ACFD, ACTI, etc.
+  description: string;
+  level: 'Professional';
+  duration: string; // e.g., "16 weeks"
+  category: 'Certification' | 'Masterclass' | 'Pro';
+  features: string[];
+  styleBoxChallenges: string[];
+}
+
 export interface User {
   name: string;
   email: string;
