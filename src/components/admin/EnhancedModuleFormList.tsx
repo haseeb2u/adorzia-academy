@@ -5,7 +5,14 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
-import { EnhancedModule } from '@/types/course';
+import { 
+  EnhancedModule, 
+  VideoLecture, 
+  ReadingMaterial, 
+  Quiz,
+  StyleBoxChallenge,
+  ModuleBadge
+} from '@/types/course';
 import { 
   Plus, Minus, Video, BookOpen, 
   HelpCircle, Puzzle, MessageSquare, Award 

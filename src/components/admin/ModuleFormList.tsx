@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ModuleFormData } from '@/pages/CourseForm';
+import { ModuleFormData } from '@/types/course';
 import { Plus, Minus } from 'lucide-react';
 
 interface ModuleFormListProps {
