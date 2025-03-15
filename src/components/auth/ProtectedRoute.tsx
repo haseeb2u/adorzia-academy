@@ -25,13 +25,25 @@ const useAuth = () => {
   }
   
   const signIn = (email: string, password: string) => {
-    // In a real app, this would validate credentials against a backend
-    // For demo, we'll authenticate any email with password longer than 5 chars
+    // Admin hardcoded credentials
+    if (email === 'admin' && password === 'admin') {
+      const userData = {
+        name: 'Administrator',
+        email: 'admin@adorzia.com',
+        role: 'admin'
+      };
+      
+      localStorage.setItem('adorziaUser', JSON.stringify(userData));
+      return true;
+    }
+    
+    // For regular users, we'll authenticate any email with password longer than 5 chars
     if (password.length >= 6) {
       const userData = {
         name: email.split('@')[0],
         email: email,
-        role: email.includes('admin') ? 'admin' : 'student'
+        // Only assign admin role if using the admin credentials
+        role: 'student'
       };
       
       localStorage.setItem('adorziaUser', JSON.stringify(userData));
@@ -45,11 +57,45 @@ const useAuth = () => {
     console.info("User signed out");
   };
   
+  // New function to update admin credentials
+  const updateAdminCredentials = (newEmail: string, newPassword: string) => {
+    // In a real app, this would update credentials in a secure backend
+    // For this demo, we'll just update a flag in localStorage
+    localStorage.setItem('adminEmail', newEmail);
+    localStorage.setItem('adminPassword', newPassword);
+    return true;
+  };
+  
+  // New function to check if a user exists
+  const userExists = (email: string) => {
+    // In a real app, this would check against a user database
+    // For this demo, we'll always return false to allow new registrations
+    return false;
+  };
+  
+  // New function to create a new user with admin privileges
+  const createAdminUser = (name: string, email: string, password: string) => {
+    // In a real app, this would create a new user with admin privileges in the database
+    // For this demo, we'll simulate successful creation
+    return true;
+  };
+  
+  // New function to invite a user to join as admin
+  const inviteAdmin = (email: string, message: string = '') => {
+    // In a real app, this would send an invitation email with a special sign-up link
+    // For this demo, we'll simulate successful invitation
+    return true;
+  };
+  
   return { 
     isAuthenticated,
     user,
     signIn,
-    signOut
+    signOut,
+    updateAdminCredentials,
+    userExists,
+    createAdminUser,
+    inviteAdmin
   };
 };
 
