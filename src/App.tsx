@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,7 +14,7 @@ import MyCourses from "./pages/MyCourses";
 import AdminDashboard from "./pages/AdminDashboard";
 import CourseForm from "./pages/CourseForm";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-// Removed ToggleAdminMode import - will only be used in the admin panel
+import AdminUsersPage from './pages/AdminUsersPage';
 
 const queryClient = new QueryClient();
 
@@ -58,6 +57,11 @@ const App = () => (
           <Route path="/admin/courses/edit/:id" element={
             <ProtectedRoute requiredRole="admin">
               <CourseForm />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/users" element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminUsersPage />
             </ProtectedRoute>
           } />
           

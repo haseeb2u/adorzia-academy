@@ -11,7 +11,7 @@ import {
   CardContent, 
   CardFooter 
 } from '@/components/ui/card';
-import { LogIn, Mail, Lock, Info } from 'lucide-react';
+import { LogIn, Mail, Lock } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -26,7 +26,6 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/auth/ProtectedRoute';
 import Navbar from '@/components/Navbar';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const formSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }),
@@ -114,14 +113,6 @@ const SignIn = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Alert className="mb-4 bg-blue-50 border-blue-200">
-                <Info className="h-4 w-4 text-blue-500" />
-                <AlertDescription className="text-sm text-blue-700">
-                  <p><strong>Admin access:</strong> Use username <code className="bg-blue-100 px-1 rounded">admin</code> and password <code className="bg-blue-100 px-1 rounded">admin</code></p>
-                  <p className="mt-1"><strong>Regular user:</strong> Use any email with password of at least 6 characters</p>
-                </AlertDescription>
-              </Alert>
-              
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField
