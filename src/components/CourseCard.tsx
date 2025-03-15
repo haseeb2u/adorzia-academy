@@ -3,6 +3,7 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Clock, Users, Star } from 'lucide-react';
+import { getLevelStyles } from '@/styles/theme-utils';
 
 interface CourseCardProps {
   title: string;
@@ -25,6 +26,8 @@ const CourseCard: React.FC<CourseCardProps> = ({
   rating,
   category,
 }) => {
+  const levelStyle = getLevelStyles(level as 'Beginner' | 'Intermediate' | 'Expert');
+  
   return (
     <div className="card group h-full flex flex-col overflow-hidden">
       <div className="relative overflow-hidden">
@@ -55,10 +58,8 @@ const CourseCard: React.FC<CourseCardProps> = ({
           </div>
         </div>
         
-        <div className={`mb-3 text-xs font-medium px-2 py-1 rounded inline-block w-fit
-          ${level === 'Beginner' ? 'bg-blue-50 text-blue-600' : 
-          level === 'Intermediate' ? 'bg-purple-50 text-purple-600' : 
-          'bg-amber-50 text-amber-600'}`}>
+        <div className="mb-3 text-xs font-medium px-2 py-1 rounded inline-block w-fit"
+          style={{ backgroundColor: levelStyle.bg, color: levelStyle.text }}>
           {level}
         </div>
         
@@ -66,7 +67,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
         <p className="text-adorzia-midGray mb-6 text-sm flex-grow">{description}</p>
         
         <Button 
-          className="bg-adorzia-accent hover:bg-adorzia-accentHover text-white w-full mt-auto"
+          className="bg-adorzia-primary hover:bg-adorzia-secondary text-white w-full mt-auto"
         >
           Enroll Now
         </Button>

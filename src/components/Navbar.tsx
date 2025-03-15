@@ -45,9 +45,9 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <a 
           href="#" 
-          className="text-2xl font-serif font-bold tracking-tight text-adorzia-darkGray"
+          className="text-2xl font-serif font-bold tracking-tight text-adorzia-primary"
         >
-          Adorzia <span className="text-adorzia-accent">Academy</span>
+          Adorzia <span className="text-adorzia-tertiary">Academy</span>
         </a>
 
         {/* Desktop menu */}
@@ -56,7 +56,7 @@ const Navbar = () => {
             <a
               key={item.name}
               href={item.href}
-              className="font-medium text-adorzia-midGray hover:text-adorzia-darkGray transition-colors duration-200"
+              className="font-medium text-adorzia-midGray hover:text-adorzia-primary transition-colors duration-200"
             >
               {item.name}
             </a>
@@ -67,7 +67,7 @@ const Navbar = () => {
           <Button variant="ghost" className="font-medium">
             Log in
           </Button>
-          <Button className="bg-adorzia-accent hover:bg-adorzia-accentHover text-white">
+          <Button className="bg-adorzia-primary hover:bg-adorzia-secondary text-white">
             Join Now
           </Button>
         </div>
@@ -98,7 +98,7 @@ const Navbar = () => {
             <a
               key={item.name}
               href={item.href}
-              className="font-medium text-xl text-adorzia-darkGray hover:text-adorzia-accent transition-colors duration-200"
+              className="font-medium text-xl text-adorzia-darkGray hover:text-adorzia-primary transition-colors duration-200"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {item.name}
@@ -109,7 +109,7 @@ const Navbar = () => {
           <Button variant="ghost" className="font-medium w-full justify-center text-lg py-6">
             Log in
           </Button>
-          <Button className="bg-adorzia-accent hover:bg-adorzia-accentHover text-white w-full justify-center text-lg py-6">
+          <Button className="bg-adorzia-primary hover:bg-adorzia-secondary text-white w-full justify-center text-lg py-6">
             Join Now
           </Button>
         </div>

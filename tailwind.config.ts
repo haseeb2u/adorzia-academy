@@ -1,5 +1,5 @@
-
 import type { Config } from "tailwindcss";
+import { adorziaColors } from "./src/styles/adorzia-theme";
 
 export default {
 	darkMode: ["class"],
@@ -68,16 +68,19 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				adorzia: {
-					blue: '#33C3F0',
-					lightBlue: '#6AD1F7',
-					darkBlue: '#1EAEDB',
-					gray: '#F6F6F7',
-					darkGray: '#221F26',
-					midGray: '#8A898C',
-					lightGray: '#F1F0FB',
-					white: '#FFFFFF',
-					accent: '#9b87f5',
-					accentHover: '#7E69AB',
+					primary: adorziaColors.primary,
+					secondary: adorziaColors.secondary,
+					tertiary: adorziaColors.tertiary,
+					dark: adorziaColors.dark,
+					
+					gray: adorziaColors.gray,
+					darkGray: adorziaColors.darkGray,
+					midGray: adorziaColors.midGray,
+					lightGray: adorziaColors.lightGray,
+					white: adorziaColors.white,
+					
+					accent: adorziaColors.accent,
+					accentHover: adorziaColors.accentHover,
 				},
 			},
 			borderRadius: {
