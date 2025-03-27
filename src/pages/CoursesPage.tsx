@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import LearningPath from '@/components/LearningPath';
 import StyleBox from '@/components/StyleBox';
 import CertificationPath from '@/components/CertificationPath';
+import { Award, ChevronRight } from 'lucide-react';
 
 const CoursesPage = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -175,6 +176,30 @@ const CoursesPage = () => {
               Our comprehensive courses combine theoretical knowledge with practical StyleBox challenges, 
               allowing you to master fashion design skills step by step.
             </p>
+          </div>
+
+          {/* ACFD Certification Banner */}
+          <div className="card p-6 md:p-8 mb-8 bg-amber-50 border-amber-300 reveal">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+                  <Award className="h-6 w-6 text-amber-600" />
+                </div>
+                <div>
+                  <Badge className="bg-amber-200 text-amber-800 mb-2">Professional Certification</Badge>
+                  <h3 className="text-xl md:text-2xl font-medium mb-2">Adorzia Certified Fashion Designer (ACFD)</h3>
+                  <p className="text-adorzia-midGray mb-4 md:mb-0">
+                    Our comprehensive 12-module certification program with StyleBox challenges and industry recognition.
+                  </p>
+                </div>
+              </div>
+              <Link to="/courses/acfd" className="md:ml-4">
+                <Button className="bg-amber-600 hover:bg-amber-700 text-white flex items-center">
+                  View Certification
+                  <ChevronRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Demo Course Banner */}

@@ -16,6 +16,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CourseForm from "./pages/CourseForm";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminUsersPage from './pages/AdminUsersPage';
+import ACFDCertification from './pages/ACFDCertification';
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/courses" element={<CoursesPage />} />
           <Route path="/courses/demo" element={<DemoCourse />} />
+          <Route path="/courses/acfd" element={<ACFDCertification />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           

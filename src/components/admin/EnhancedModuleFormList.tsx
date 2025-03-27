@@ -12,13 +12,9 @@ import StyleBoxSection from './module-components/StyleBoxSection';
 import BadgeSection from './module-components/BadgeSection';
 import CommunitySection from './module-components/CommunitySection';
 
-interface EnhancedModuleFormData extends Omit<EnhancedModule, 'resources'> {
-  // We'll use this for the form
-}
-
 interface EnhancedModuleFormListProps {
-  modules: EnhancedModuleFormData[];
-  setModules: React.Dispatch<React.SetStateAction<EnhancedModuleFormData[]>>;
+  modules: EnhancedModule[];
+  setModules: React.Dispatch<React.SetStateAction<EnhancedModule[]>>;
 }
 
 const EnhancedModuleFormList: React.FC<EnhancedModuleFormListProps> = ({ modules, setModules }) => {
@@ -26,10 +22,11 @@ const EnhancedModuleFormList: React.FC<EnhancedModuleFormListProps> = ({ modules
 
   const addModule = () => {
     const newId = `module-${Date.now()}`;
-    const newModule: EnhancedModuleFormData = { 
+    const newModule: EnhancedModule = { 
       id: newId, 
       title: '', 
       description: '',
+      resources: [],
       videoLectures: [],
       readings: [],
       quizzes: [],
