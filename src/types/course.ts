@@ -1,3 +1,7 @@
+// Legacy course types - keeping for backward compatibility
+// New LMS types are in src/types/lms.ts
+
+import { Certification, Module as LMSModule, StyleBoxChallenge as LMSStyleBoxChallenge } from './lms';
 
 export interface LearningResource {
   id: string;
@@ -116,7 +120,7 @@ export interface EnhancedCourse {
   }[];
 }
 
-// Adorzia Certification Courses
+// Adorzia Certification Courses - Legacy type, migrate to new Certification type
 export interface AdorziaCourse {
   id: string;
   title: string;
@@ -151,3 +155,8 @@ export interface ModuleFormData {
   duration: number;
   order: number;
 }
+
+// Type aliases for migration to new LMS system
+export type LMSCertification = Certification;
+export type LMSModule = LMSModule;
+export type LMSStyleBoxChallenge = LMSStyleBoxChallenge;
